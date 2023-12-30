@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+  backend-server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    entrypoint: ["java","-jar","/app/app.jar"]
+    working_dir: /app/
+    volumes:
+      - ./backend:/app/
+    ports:
+      - 3333:3333
+  frontend-server:
+    build:
+      context: ./frontend
+    ports:
+      - 4444:80
+  
