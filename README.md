@@ -3,6 +3,9 @@
 <br>
 <h3> Basic logic is here to make instance of SimplePeer.js on each browser and send signal of  SimplePeer to each other, stream of video will be done automaticly. </h3>
 <img src="https://github.com/JimmyShukurow/VideoCallApp/blob/main/images/demo.png" alt="demo">
+<img src="https://github.com/JimmyShukurow/VideoCallApp/blob/main/images/call.png" alt="call">
+<img src="https://github.com/JimmyShukurow/VideoCallApp/blob/main/images/answer.png" alt="answer">
+<img src="https://github.com/JimmyShukurow/VideoCallApp/blob/main/images/Video-call-final.png" alt="final">
 <p> Similar example <a href="https://github.com/adrianhajdin/project_video_chat">https://github.com/adrianhajdin/project_video_chat</a>
 <p> If you have a docker and docker compose in your computer you can download docker-compose-files folder and run it. </p>
 <p>It will give you Frontend with <br>localhost:4444<br> and backend with <br>localhost:3333<br></p>
