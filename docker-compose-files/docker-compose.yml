@@ -1,6 +1,11 @@
 version: '3.3'
 
 services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
   backend-server:
     build:
       context: ./backend
@@ -12,9 +17,15 @@ services:
       - ./backend:/app/
     ports:
       - 3333:3333
+    depends_on:
+      - redis
+    environment:
+      SPRING_REDIS_HOST: redis
+
   frontend-server:
     build:
       context: ./frontend
     ports:
       - 4444:80
+  
   

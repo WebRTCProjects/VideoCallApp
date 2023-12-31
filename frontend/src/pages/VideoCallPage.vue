@@ -1,6 +1,9 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <h3>Your username: {{ store.getUsername }}</h3>
+    <h3 class="">
+      Your username: {{ store.getUsername }}
+      <q-btn no-caps color="info" to="/chat">Back to chat</q-btn>
+    </h3>
     <div class="full-width row items-center justify-evenly">
       <video
         width="600"

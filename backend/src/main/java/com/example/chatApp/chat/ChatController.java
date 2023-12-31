@@ -44,9 +44,9 @@ public class ChatController {
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor simpMessageHeaderAccessor) {
-        //Send mail about new user
-//        mailService.sendMail(chatMessage.getSender() + " is joined to chat");
-        //Add username to web socket session
+//        Send mail about new user
+        mailService.sendMail(chatMessage.getSender() + " is joined to chat");
+//        Add username to web socket session
         Set<String> users;
         if (redisTemplate.opsForValue().get("users") != null){
              users = (Set<String>)  redisTemplate.opsForValue().get("users");
@@ -89,7 +89,7 @@ public class ChatController {
     public ResponseEntity<String> checkUsername(@RequestBody UsernameRequest request) {
         System.out.println("username is=> " + request.getUsername());
         var users = (Set<String>)  redisService.getData("users");
-        if (users.contains(request.getUsername())) {
+        if (users != null && users.contains(request.getUsername())) {
             return ResponseEntity.badRequest().body("Username is already taken");
         }
 

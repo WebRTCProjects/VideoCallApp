@@ -2,7 +2,9 @@
   <q-page class="row items-center justify-evenly">
     <q-card class="main-area">
       <div class="messages">
-        <p class="title">Springboot and Vue3 Quasar Stomp-Websocket</p>
+        <p class="title">
+          {{ store.getUsername }}
+        </p>
         <q-separator />
         <div class="messages--body">
           <div id="scrollArea" class="messages--conversation-area">

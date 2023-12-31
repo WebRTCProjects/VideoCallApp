@@ -14,7 +14,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig  {
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName("redis");
+        config.setPort(6379);
+        return new JedisConnectionFactory(config);
     }
 
     @Bean

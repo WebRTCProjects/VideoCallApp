@@ -19,6 +19,8 @@ body {
 }
 .title {
   font-size: min(3vh, 25px);
+  display: flex;
+  justify-content: center;
 }
 .enter-button {
   margin-top: 20px;
