@@ -20,10 +20,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { initSocket, enterToChat, send } from 'src/socket';
+import { initSocket, enterToChat } from 'src/socket';
 import { useMessageStore } from 'src/stores/message-store';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const store = useMessageStore();
 const username = ref('');
@@ -39,10 +40,23 @@ function connectToChat() {
     });
     return;
   }
-  store.username = username.value;
-  connected.value = enterToChat(username.value);
-  username.value = '';
-  router.push('/chat');
+  axios
+    .post(process.env.API + '/check-if-username-free', {
+      username: username.value,
+    })
+    .then(() => {
+      store.username = username.value;
+      connected.value = enterToChat(username.value);
+      username.value = '';
+      router.push('/chat');
+    })
+    .catch((err) => {
+      $q.notify({
+        message: err.response.data,
+        color: 'negative',
+      });
+      return;
+    });
 }
 
 onMounted(() => {

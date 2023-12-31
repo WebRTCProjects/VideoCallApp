@@ -2,6 +2,7 @@ package com.example.chatApp.chat;
 
 import com.example.chatApp.MailService;
 import com.example.chatApp.RedisService;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -12,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
@@ -81,6 +83,17 @@ public class ChatController {
     public ResponseEntity<String> deleteUsers(){
         redisService.deleteData("users");
         return ResponseEntity.ok().body("Users are deleted!");
+    }
+
+    @PostMapping("/check-if-username-free")
+    public ResponseEntity<String> checkUsername(@RequestBody UsernameRequest request) {
+        System.out.println("username is=> " + request.getUsername());
+        var users = (Set<String>)  redisService.getData("users");
+        if (users.contains(request.getUsername())) {
+            return ResponseEntity.badRequest().body("Username is already taken");
+        }
+
+        return ResponseEntity.ok().body("Good username");
     }
 
 }

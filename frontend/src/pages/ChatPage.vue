@@ -89,14 +89,6 @@ const scrollToElement = () => {
   const el = document.getElementById('scrollArea');
   const lastMessage = el.lastElementChild;
   lastMessage?.scrollIntoView();
-
-  // if (lastMessage) {
-  //   lastMessage.scrollIntoView({
-  //     behavior: 'smooth',
-  //     block: 'end', // Adjust this to 'start' or 'center' if needed
-  //     inline: 'nearest', // Adjust this to 'start' or 'center' if needed
-  //   });
-  // }
 };
 
 onMounted(() => {

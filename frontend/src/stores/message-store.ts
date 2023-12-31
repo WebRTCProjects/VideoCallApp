@@ -6,6 +6,7 @@ export const useMessageStore = defineStore('message', {
     content: [''],
     userNameColor: <{ username: string; color: string }>{},
     someoneCalling: false,
+    connectionStatus: false,
   }),
   getters: {
     getUsername: (state) => state.username,
@@ -14,6 +15,7 @@ export const useMessageStore = defineStore('message', {
       return state.userNameColor[username];
     },
     getSomeOneCalling: (state) => state.someoneCalling,
+    getConnectionStatus: (state) => state.connectionStatus,
   },
   actions: {
     addToContent(message: string) {
@@ -24,6 +26,9 @@ export const useMessageStore = defineStore('message', {
     },
     setSomeOneCalling(status: boolean) {
       this.someoneCalling = status;
+    },
+    setConnectionStatus(status: boolean) {
+      this.connectionStatus = status;
     },
   },
 });

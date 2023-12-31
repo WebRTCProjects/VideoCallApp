@@ -10,9 +10,7 @@ import { useUsersStore } from './stores/user-store';
 
 const store = useMessageStore();
 const URL = process.env.API + '/ws';
-const connectionRef = ref();
 const streamStore = useVideoStore();
-const users = useUsersStore();
 
 export const bus = new EventBus();
 
@@ -30,8 +28,6 @@ const colors = [
 
 let stompCLient: Stomp.client;
 
-let connectionStatus = false;
-
 export const initSocket = () => {
   return con();
 };
@@ -39,27 +35,29 @@ export const initSocket = () => {
 export const con = () => {
   const socket = new SockJS(URL);
   stompCLient = Stomp.over(socket);
-  // stompCLient.debug = null;
+  stompCLient.debug = null;
 
   const header = {};
+  if (!store.getConnectionStatus) {
+    stompCLient.connect(
+      header,
+      () => {
+        store.setConnectionStatus(true);
+        stompCLient.subscribe('/topic/public', onMessageRecieved, header);
+      },
+      (err: any) => {
+        console.log('error is=>', err);
+      }
+    );
+  }
 
-  stompCLient.connect(
-    header,
-    () => {
-      connectionStatus = true;
-      stompCLient.subscribe('/topic/public', onMessageRecieved, header);
-    },
-    (err: any) => {
-      console.log('error is=>', err);
-    }
-  );
   return stompCLient;
 };
 
 export const close = () => {
   if (stompCLient) {
     stompCLient.disconnect(() => {
-      connectionStatus = false;
+      store.setConnectionStatus(false);
     });
   }
 };
@@ -70,7 +68,7 @@ export const send = (username: string, message: string) => {
     content: message,
     type: 'CHAT',
   };
-  if (connectionStatus) {
+  if (store.getConnectionStatus) {
     try {
       stompCLient.send(
         '/app/chat.sendMessage',
@@ -84,7 +82,7 @@ export const send = (username: string, message: string) => {
 };
 
 export const enterToChat = (username: string) => {
-  if (connectionStatus) {
+  if (store.getConnectionStatus) {
     try {
       stompCLient.send(
         '/app/chat.addUser',
@@ -95,7 +93,7 @@ export const enterToChat = (username: string) => {
       con();
     }
   }
-  return connectionStatus;
+  return store.getConnectionStatus;
 };
 function getAvatarColor(messageSender: string) {
   let hash = 0;
@@ -127,7 +125,10 @@ function onMessageRecieved(payload: any) {
     bus.emit('scroll');
   } else if (message.type === 'VIDEOCALL') {
     console.log('Video call', message);
-    if (message.from != store.getUsername) {
+    if (
+      message.from != store.getUsername &&
+      message.sender == store.getUsername
+    ) {
       store.setSomeOneCalling(true);
       streamStore.setSignal(message.signal);
       streamStore.setCaller(message.sender);
@@ -163,7 +164,7 @@ export const videoCall = (signal: any, sender: any, from: string) => {
     type: 'VIDEOCALL',
   };
 
-  if (connectionStatus) {
+  if (store.getConnectionStatus) {
     try {
       stompCLient.send(
         '/app/chat.videoCall',
