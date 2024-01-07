@@ -43,7 +43,6 @@
           >Call - {{ user }}</q-btn
         >
       </div>
-
     </div>
     <div v-if="callAccepted">
       <q-btn @click="leaveCall()" color="negative">End Call</q-btn>
