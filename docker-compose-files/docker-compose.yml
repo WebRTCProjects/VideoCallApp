@@ -13,6 +13,8 @@ services:
     restart: always
     entrypoint: ["java","-jar","/app/app.jar"]
     working_dir: /app/
+    env_file:
+      - ./.env
     volumes:
       - ./backend:/app/
     ports:

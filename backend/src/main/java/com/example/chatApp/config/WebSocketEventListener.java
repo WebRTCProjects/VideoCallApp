@@ -1,6 +1,7 @@
 package com.example.chatApp.config;
 
 import com.example.chatApp.RedisService;
+import com.example.chatApp.TelegramService;
 import com.example.chatApp.chat.ChatMessage;
 import com.example.chatApp.chat.MessageType;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,13 @@ public class WebSocketEventListener {
 
     private final SimpMessageSendingOperations messageTemplate;
     private final RedisService redisService;
+    private final TelegramService telegramService;
 
 
-    public WebSocketEventListener(SimpMessageSendingOperations messageTemplate, RedisService redisService) {
+    public WebSocketEventListener(SimpMessageSendingOperations messageTemplate, RedisService redisService, TelegramService telegramService) {
         this.messageTemplate = messageTemplate;
         this.redisService = redisService;
+        this.telegramService = telegramService;
     }
 
     @EventListener
@@ -36,6 +39,7 @@ public class WebSocketEventListener {
                     .sender(username)
                     .build();
             messageTemplate.convertAndSend("/topic/public",chatMessage );
+            telegramService.sendMessage(chatMessage.getSender()+" left the chat");
             redisService.updateUsers(username);
 
         }
