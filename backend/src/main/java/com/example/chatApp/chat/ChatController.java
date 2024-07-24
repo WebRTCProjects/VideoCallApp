@@ -35,7 +35,6 @@ public class ChatController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-
         telegramService.sendMessage(chatMessage.getSender() + ": " + chatMessage.getContent());
         return chatMessage;
     }
@@ -62,7 +61,6 @@ public class ChatController {
     @SendTo("/topic/public")
     public VideoCallMessage joinVideo(@Payload VideoCallMessage message) {
         redisService.saveData("caller", message);
-
         return message;
     }
 
