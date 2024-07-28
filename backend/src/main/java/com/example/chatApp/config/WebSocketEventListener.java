@@ -9,6 +9,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Component
@@ -42,6 +43,23 @@ public class WebSocketEventListener {
             telegramService.sendMessage(chatMessage.getSender()+" left the chat");
             redisService.updateUsers(username);
 
+        }
+    }
+
+    @EventListener
+    public void handleNewUserJoined(SessionConnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String username = (String) headerAccessor.getSessionAttributes().get("username");
+
+        if (username != null) {
+            log.info("User connected {}", username);
+
+            var chatMessage = ChatMessage.builder()
+                    .type(MessageType.JOIN)
+                    .sender(username)
+                    .build();
+            messageTemplate.convertAndSend("/topic/public",chatMessage );
+            telegramService.sendMessage(chatMessage.getSender()+" joined the chat");
         }
     }
 }
