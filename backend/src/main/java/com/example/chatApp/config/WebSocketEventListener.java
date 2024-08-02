@@ -45,21 +45,4 @@ public class WebSocketEventListener {
 
         }
     }
-
-    @EventListener
-    public void handleNewUserJoined(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-
-        if (username != null) {
-            log.info("User connected {}", username);
-
-            var chatMessage = ChatMessage.builder()
-                    .type(MessageType.JOIN)
-                    .sender(username)
-                    .build();
-            messageTemplate.convertAndSend("/topic/public",chatMessage );
-            telegramService.sendMessage(chatMessage.getSender()+" joined the chat");
-        }
-    }
 }
